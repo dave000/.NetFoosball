@@ -15,19 +15,28 @@ namespace LiveFoosball.Controllers
         Red = 2
     }
 
+    [RoutePrefix("api/foosball")]
     public class FoosballController : ApiController
     {
-        [ActionName("start"), HttpGet]
+        [Route("start"), HttpGet]
         public void StartGame()
         {
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<FoosballHub>();
+            var hubContext = _getHubContext();
             hubContext.Clients.All.canStartGame();
         }
 
-        [ActionName("goal"), HttpGet]
-        public void Goal()
+        [Route("goal/{team}"), HttpGet]
+        public Team Goal(Team team)
         {
+            var hubContext = _getHubContext();
+            hubContext.Clients.All.goal(team);
 
+            return team;
+        }
+
+        private IHubContext _getHubContext()
+        {
+            return GlobalHost.ConnectionManager.GetHubContext<FoosballHub>();
         }
     }
 }
