@@ -9,12 +9,25 @@ using System.Web.Http;
 
 namespace LiveFoosball.Controllers
 {
+    public enum Team
+    {
+        Blue = 1,
+        Red = 2
+    }
+
     public class FoosballController : ApiController
     {
         [ActionName("start"), HttpGet]
         public void StartGame()
         {
-            GlobalHost.ConnectionManager.GetHubContext<FoosballHub>().Clients.All.canStartGame();
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<FoosballHub>();
+            hubContext.Clients.All.canStartGame();
+        }
+
+        [ActionName("goal"), HttpGet]
+        public void Goal()
+        {
+
         }
     }
 }

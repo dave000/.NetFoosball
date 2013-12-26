@@ -6,22 +6,11 @@ using Microsoft.AspNet.SignalR;
 
 namespace LiveFoosball.SignalR
 {
-    public enum Team
+     public class FoosballHub : Hub
     {
-        Blue = 1,
-        Red = 2
-    }
-
-    public class FoosballHub : Hub
-    {
-        public void Goal(Team team)
-        {
-            Clients.All.goal(team);
-        }
-
         public void StartGame()
         {
-            Clients.All.canStartGame();
+            Clients.AllExcept(Context.ConnectionId).canStartGame();
         }
     }
 }

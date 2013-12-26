@@ -12,7 +12,7 @@
     <!--SignalR script to update the chat page and send messages.-->
     <script>
         $(function () {
-            debugger;
+            
             // Reference the auto-generated proxy for the hub.
             var game = $.connection.foosballHub;
             // Create a function that the hub can call back to display messages.
@@ -24,6 +24,10 @@
                 alert("new game");
             }
 
+            $('#startGame').click(function () {
+                game.server.startGame();
+            });
+
             $.connection.hub.start();
 
         });
@@ -33,4 +37,6 @@
             return encodedValue;
         }
     </script>
-}div>
+}
+
+<button type="button" id="startGame" value="Start">Start</button>
