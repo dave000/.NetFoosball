@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LiveFoosball.SignalR;
+using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -84,6 +86,31 @@ namespace LiveFoosball.GameData
             }
 
             Score.LastScore = goalTime;
+        }
+
+        public static void TrackGoal(dynamic result)
+        {
+            var goalValue = result.body;
+            if (Current != null && !Current.Finished && goalValue != null && goalValue.id == "Goal")
+            {
+                try
+                {
+                    Team team = Enum.Parse(typeof(Team), goalValue.current_value.Value);
+                    Current.TrackGoal(team, goalValue.at.Value);
+                    var hubContext = _getHubContext();
+                    hubContext.Clients.All.goal(Current.Score);
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+                
+            }
+        }
+
+        private static IHubContext _getHubContext()
+        {
+            return GlobalHost.ConnectionManager.GetHubContext<FoosballHub>();
         }
     }
 }
