@@ -20,7 +20,7 @@ namespace LiveFoosball.Controllers
             hubContext.Clients.All.canStartGame();
         }
 
-        [Route("goal/{team}"), HttpGet]
+        [Route("goal/{team}"), HttpPost]
         public bool Goal(Team team)
         {
             var currentGame = Game.Current;
