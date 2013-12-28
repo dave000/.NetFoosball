@@ -5,7 +5,7 @@ using System.Web;
 using  System.Collections.Concurrent;
 
 
-namespace LiveFoosball.Game
+namespace LiveFoosball.GameData
 {
     public static class GameStarter
     {

@@ -1,7 +1,7 @@
 ﻿using Owin;
 using Microsoft.Owin;
-[assembly: OwinStartup(typeof(SignalRChat.Startup))]
-namespace SignalRChat
+[assembly: OwinStartup(typeof(LiveFoosball.Startup))]
+namespace LiveFoosball
 {
     public class Startup
     {

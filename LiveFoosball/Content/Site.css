@@ -40,3 +40,54 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.button {
+    margin-top: 25px;
+    background: none;
+    background-color: blue;
+    width: 100%;
+    color: white;
+    border:0;
+    height: 50px;
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.scoreTable {
+    font-size: 10em;
+    text-align: center;
+}
+
+.scoreTable span#blue {
+    color: blue;
+}
+
+.scoreTable span#red {
+    color: red;
+}
+
+.navbar-inverse {
+    color: white;
+    /* fallback */
+  background-color: blue;
+  
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(blue), to(red));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, blue, red);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, blue, red);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, blue, red);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, blue, red); 
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav > li > a {
+    color: white;
+}

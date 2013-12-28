@@ -146,8 +146,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\FoosballController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Game\Game.cs" />
-    <Compile Include="Game\GameStarter.cs" />
+    <Compile Include="GameData\Game.cs" />
+    <Compile Include="GameData\GameStarter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

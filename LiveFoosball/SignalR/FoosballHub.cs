@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
-using LiveFoosball.Game;
+using LiveFoosball.GameData;
 
 namespace LiveFoosball.SignalR
 {
@@ -21,13 +21,12 @@ namespace LiveFoosball.SignalR
             else
             {
                 var gameInfo = GameStarter.TryStartGame(clientId);
-
-                if (!gameInfo.Started)
+                dynamic client = Clients.Client(Game.Current.Info.ClientId);
+                if (!gameInfo.Started && client != null)
                 {
-                    Clients.Client(Game.Game.Current.Info.ClientId).canStartGame(gameInfo);
+                    client.canStartGame(gameInfo);
                 }
-
-
+                
                 return gameInfo;
             }
 
@@ -38,7 +37,12 @@ namespace LiveFoosball.SignalR
         public void CancelPendingGame(GameInfo gameInfo)
         {
             GameStarter.CancelPendingGame(gameInfo.Id);
-            Clients.Client(gameInfo.ClientId).gameCanceled(gameInfo.Id);
+            var client = Clients.Client(gameInfo.ClientId);
+            if (client != null)
+            {
+                client.gameCanceled(gameInfo.Id);
+            }
+            
         }
     }
 }

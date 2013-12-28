@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace LiveFoosball.Game
+namespace LiveFoosball.GameData
 {
+    public enum Team
+    {
+        Blue = 1,
+        Red = 2
+    }
+
     public class Score
     {
         public byte Red { get; set; }
         public byte Blue { get; set; }
+
+        public DateTime LastScore { get; set; }
     }
 
     public class GameInfo
@@ -29,9 +37,9 @@ namespace LiveFoosball.Game
 
     public class Game
     {
+        public const byte WinScore = 10; 
+
         public GameInfo Info { get; private set; }
-
-
 
         public Score Score { get; private set; }
 
@@ -39,7 +47,7 @@ namespace LiveFoosball.Game
         {
             get
             {
-                return Score.Blue == 10 || Score.Red == 10;
+                return Score.Blue == WinScore || Score.Red == WinScore;
             }
         }
 
@@ -57,6 +65,25 @@ namespace LiveFoosball.Game
             newGame.Info.Started = true;
             Current = newGame;
             return newGame.Info;
+        }
+
+        public void TrackGoal(Team team, DateTime goalTime)
+        {
+            if (Finished)
+            {
+                return;
+            }
+
+            if (team == Team.Blue)
+            {
+                Score.Blue++;
+            }
+            else
+            {
+                Score.Red++;
+            }
+
+            Score.LastScore = goalTime;
         }
     }
 }

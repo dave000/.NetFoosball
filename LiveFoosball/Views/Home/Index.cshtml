@@ -12,24 +12,36 @@
     <!--SignalR script to update the chat page and send messages.-->
     <script>
         $(function () {
-            
+            var gameId = null, score, $red = $('#red'), $blue = $('#blue');
             // Reference the auto-generated proxy for the hub.
             var game = $.connection.foosballHub;
             // Create a function that the hub can call back to display messages.
-            game.client.goal = function (team) {
-                alert(team);
+            game.client.goal = function (newScore) {
+                score = newScore;
+                updateScore();
             };
-            
-            game.client.canStartGame = function () {
-                alert("new game");
+
+            game.client.canStartGame = function (gameInfo) {
+                console.log("Game start request:" + gameInfo.Id);
             }
 
             $('#startGame').click(function () {
-                game.server.startGame();
+                var gameInfo = game.server.startGame(gameId).done(function (gameInfo) {
+                    gameId = gameInfo.Id;
+                    if (gameInfo.Started) {
+                        score = { Red: 0, Blue: 0 };
+                        updateScore();
+                    }
+                    console.log("New Game:" + gameInfo.Id + ", Started:" + gameInfo.Started);
+                });
             });
 
             $.connection.hub.start();
 
+            function updateScore() {
+                $blue.text(score.Blue);
+                $red.text(score.Red);
+            }
         });
         // This optional function html-encodes messages for display in the page.
         function htmlEncode(value) {
@@ -39,4 +51,7 @@
     </script>
 }
 
-<button type="button" id="startGame" value="Start">Start</button>
+<button type="button" id="startGame" class="button" value="START">START</button>
+<div class="scoreTable">
+    <span id="red">0</span>-<span id="blue">0</span>
+</div>

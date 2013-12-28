@@ -1,4 +1,5 @@
-﻿using LiveFoosball.SignalR;
+﻿using LiveFoosball.GameData;
+using LiveFoosball.SignalR;
 using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,6 @@ using System.Web.Http;
 
 namespace LiveFoosball.Controllers
 {
-    public enum Team
-    {
-        Blue = 1,
-        Red = 2
-    }
-
     [RoutePrefix("api/foosball")]
     public class FoosballController : ApiController
     {
@@ -26,12 +21,19 @@ namespace LiveFoosball.Controllers
         }
 
         [Route("goal/{team}"), HttpGet]
-        public Team Goal(Team team)
+        public bool Goal(Team team)
         {
-            var hubContext = _getHubContext();
-            hubContext.Clients.All.goal(team);
+            var currentGame = Game.Current;
+            if (currentGame != null)
+            {
+                var hubContext = _getHubContext();
+                currentGame.TrackGoal(team, DateTime.UtcNow);
+                hubContext.Clients.All.goal(currentGame.Score);
+                return true;
+            }
+            
 
-            return team;
+            return false;
         }
 
         private IHubContext _getHubContext()
