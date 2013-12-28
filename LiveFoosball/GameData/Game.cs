@@ -2,6 +2,7 @@
 using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -71,6 +72,7 @@ namespace LiveFoosball.GameData
 
         public void TrackGoal(Team team, DateTime goalTime)
         {
+            Trace.WriteLine(String.Format("Goal from {0} @ {1}", team, goalTime));
             if (Finished)
             {
                 return;
@@ -88,15 +90,14 @@ namespace LiveFoosball.GameData
             Score.LastScore = goalTime;
         }
 
-        public static void TrackGoal(dynamic result)
+        public static void TrackGoal(dynamic goalData)
         {
-            var goalValue = result.body;
-            if (Current != null && !Current.Finished && goalValue != null && goalValue.id == "Goal")
+            if (Current != null && !Current.Finished && goalData != null && goalData.id == "Goal")
             {
                 try
                 {
-                    Team team = Enum.Parse(typeof(Team), goalValue.current_value.Value);
-                    Current.TrackGoal(team, goalValue.at.Value);
+                    Team team = Enum.Parse(typeof(Team), goalData.current_value.Value);
+                    Current.TrackGoal(team, goalData.at.Value);
                     var hubContext = _getHubContext();
                     hubContext.Clients.All.goal(Current.Score);
                 }

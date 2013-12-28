@@ -109,7 +109,10 @@ namespace XivelyClient
                         ConnectedToXively = dResponse.status == 200;
                     }
 
-                    callback(dResponse);
+                    if (dResponse.body != null)
+                    {
+                        callback(dResponse.body);
+                    }
                 }
                 
             }

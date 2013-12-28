@@ -12,7 +12,7 @@
     <!--SignalR script to update the chat page and send messages.-->
     <script>
         $(function () {
-            var gameId = null, score, $red = $('#red'), $blue = $('#blue');
+            var gameId = null, score, $red = $('#red'), $blue = $('#blue'), $startGame = $('#startGame'), $temp = $('#temp');
             // Reference the auto-generated proxy for the hub.
             var game = $.connection.foosballHub;
             // Create a function that the hub can call back to display messages.
@@ -27,13 +27,21 @@
 
             $('#startGame').click(function () {
                 var gameInfo = game.server.startGame(gameId).done(function (gameInfo) {
-                    gameId = gameInfo.Id;
-                    if (gameInfo.Started) {
-                        score = { Red: 0, Blue: 0 };
-                        updateScore();
+                    if (gameInfo) {
+                        gameId = gameInfo.Id;
+                        if (gameInfo.Started) {
+                            score = { Red: 0, Blue: 0 };
+                            updateScore();
+                            $startGame.hide();
+                            gameId = null;
+                        } else {
+                            $startGame.text('Waiting to start game');
+
+                        }
+                        console.log("New Game:" + gameInfo.Id + ", Started:" + gameInfo.Started);
+
                     }
-                    console.log("New Game:" + gameInfo.Id + ", Started:" + gameInfo.Started);
-                });
+                    });
             });
 
             $.connection.hub.start();
@@ -41,7 +49,46 @@
             function updateScore() {
                 $blue.text(score.Blue);
                 $red.text(score.Red);
+
+                if (score.Blue == 10 || score.Red == 10) {
+                    $startGame.show();
+                }
             }
+
+            //alert("WebSocket is supported by your Browser!");
+            // Let us open a web socket
+            var ws = new WebSocket("ws://api.xively.com:8080");
+            ws.onopen = function () {
+                // Web Socket is connected, send data using send()
+
+                var jsonMessage = { method: "subscribe", resource: "/feeds/1996686508/datastreams/Szoba", headers: { "X-ApiKey": "@ViewBag.ApiKey" }, token: "subscribeFeed" };
+
+                var message = JSON.stringify(jsonMessage);
+
+                ws.send(message);
+
+                jsonMessage.method = "get";
+                message = JSON.stringify(jsonMessage);
+
+                ws.send(message);
+
+                //alert("Message is sent...");
+            };
+            ws.onmessage = function (evt) {
+                //debugger;
+
+                var received_msg = evt.data;
+                var result = JSON.parse(received_msg);
+
+                if (result.body)
+                {
+                    $temp.text(result.body.current_value + " " + result.body.unit.symbol);
+                }
+            };
+            ws.onclose = function () {
+                // websocket is closed.
+                alert("Connection is closed...");
+            };
         });
         // This optional function html-encodes messages for display in the page.
         function htmlEncode(value) {
@@ -51,7 +98,11 @@
     </script>
 }
 
+
+<div>
+    Room temperature: <span id="temp"></span>
+</div>
 <button type="button" id="startGame" class="button" value="START">START</button>
 <div class="scoreTable">
-    <span id="red">0</span>-<span id="blue">0</span>
+    <span id="red">@ViewBag.Score.Red</span>-<span id="blue">@ViewBag.Score.Blue</span>
 </div>
