@@ -31,7 +31,7 @@ namespace XivelyClient
         public static async Task Connect(string uri, string feed, XivelyTrigger callback)
         {
             ClientWebSocket webSocket = null;
-
+            log.Info("Subscribe task started!");
             try
             {
                 webSocket = new ClientWebSocket();
@@ -42,7 +42,7 @@ namespace XivelyClient
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: {0}", ex);
+                log.Error("Exception: {0}", ex);
             }
             finally
             {
