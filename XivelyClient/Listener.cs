@@ -102,7 +102,7 @@ namespace XivelyClient
                     
                 if (result.Result.EndOfMessage) {
                     var message = Encoding.UTF8.GetString(loadedData.ToArray());
-                    var logMessage = String.Format("R: {0}, {1}, {2}, {3}, {4}", result.Result.MessageType, result.Result.CloseStatus, result.Result.CloseStatusDescription, result.Result.EndOfMessage, message);
+                    var logMessage = String.Format("R: {0}", message);
                     log.Info(logMessage);
                     //Trace.WriteLine();
                 
@@ -116,6 +116,7 @@ namespace XivelyClient
 
                     if (dResponse.body != null)
                     {
+                        log.Info("Send track goal data");
                         callback(dResponse.body);
                     }
                 }
