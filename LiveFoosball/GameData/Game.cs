@@ -103,7 +103,7 @@ namespace LiveFoosball.GameData
                 }
                 catch (Exception ex)
                 {
-                    
+                    Trace.WriteLine("Error in track goal: " + ex.Message);
                 }
                 
             }

@@ -97,14 +97,15 @@ namespace XivelyClient
                 var result = webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 result.Wait();
                 loadedData.AddRange(buffer);
-                //Trace.WriteLine(String.Format("R: {0}, {1}, {2}, {3}, {4}", result.Result.MessageType, result.Result.CloseStatus, result.Result.CloseStatusDescription, result.Result.EndOfMessage, message));
                     
                 if (result.Result.EndOfMessage) {
                     var message = Encoding.UTF8.GetString(loadedData.ToArray());
+                    Trace.WriteLine(String.Format("R: {0}, {1}, {2}, {3}, {4}", result.Result.MessageType, result.Result.CloseStatus, result.Result.CloseStatusDescription, result.Result.EndOfMessage, message));
+                
                     loadedData.Clear();
                     object response = JsonConvert.DeserializeObject(message);
                     dynamic dResponse = (dynamic)response;
-                    if (dResponse.token == "subscribeFeed")
+                    if (dResponse.token == "subscribeFeed" && dResponse.body == null)
                     {
                         ConnectedToXively = dResponse.status == 200;
                     }

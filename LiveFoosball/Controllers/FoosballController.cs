@@ -13,6 +13,12 @@ namespace LiveFoosball.Controllers
     [RoutePrefix("api/foosball")]
     public class FoosballController : ApiController
     {
+        [Route("xively")]
+        public bool GetXivelyStatus()
+        {
+            return XivelyClient.Listener.ConnectedToXively;
+        }
+
         [Route("start"), HttpGet]
         public void StartGame()
         {
