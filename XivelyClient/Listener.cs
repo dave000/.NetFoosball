@@ -11,6 +11,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 
 namespace XivelyClient
 {
@@ -25,6 +26,7 @@ namespace XivelyClient
         private const int receiveChunkSize = 64;
         private const bool verbose = true;
         private static readonly TimeSpan delay = TimeSpan.FromMilliseconds(1000);
+        private static Logger log = LogManager.GetCurrentClassLogger();
 
         public static async Task Connect(string uri, string feed, XivelyTrigger callback)
         {
@@ -34,7 +36,7 @@ namespace XivelyClient
             {
                 webSocket = new ClientWebSocket();
                 await webSocket.ConnectAsync(new Uri(uri), CancellationToken.None);
-
+                log.Info("Subscribing to Xively");
                 Subscribe(webSocket, feed, ConfigurationManager.AppSettings["XivelyAPIKey"], callback);
 
             }
@@ -89,7 +91,7 @@ namespace XivelyClient
 
         private static void Receive(ClientWebSocket webSocket, XivelyTrigger callback)
         {
-            
+            log.Info("Start receiving data");
             List<byte> loadedData = new List<byte>();
             while (webSocket.State == WebSocketState.Open)
             {
@@ -100,7 +102,9 @@ namespace XivelyClient
                     
                 if (result.Result.EndOfMessage) {
                     var message = Encoding.UTF8.GetString(loadedData.ToArray());
-                    Trace.WriteLine(String.Format("R: {0}, {1}, {2}, {3}, {4}", result.Result.MessageType, result.Result.CloseStatus, result.Result.CloseStatusDescription, result.Result.EndOfMessage, message));
+                    var logMessage = String.Format("R: {0}, {1}, {2}, {3}, {4}", result.Result.MessageType, result.Result.CloseStatus, result.Result.CloseStatusDescription, result.Result.EndOfMessage, message);
+                    log.Info(logMessage);
+                    //Trace.WriteLine();
                 
                     loadedData.Clear();
                     object response = JsonConvert.DeserializeObject(message);

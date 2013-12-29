@@ -1,5 +1,6 @@
 ﻿using LiveFoosball.SignalR;
 using Microsoft.AspNet.SignalR;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -56,6 +57,8 @@ namespace LiveFoosball.GameData
 
         public static Game Current { get; private set; }
 
+        private static Logger log = LogManager.GetCurrentClassLogger();
+
         private Game(Guid id, String clientId)
         {
             Info = new GameInfo(id, clientId);
@@ -104,6 +107,7 @@ namespace LiveFoosball.GameData
                 catch (Exception ex)
                 {
                     Trace.WriteLine("Error in track goal: " + ex.Message);
+                    log.Error("Error in track goal: {0}", ex.Message);
                 }
                 
             }
