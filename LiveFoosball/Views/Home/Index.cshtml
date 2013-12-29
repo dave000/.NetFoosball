@@ -88,6 +88,7 @@
             ws.onclose = function () {
                 // websocket is closed.
                 //alert("Connection is closed...");
+                console.log("xively socket closed");
             };
         });
         // This optional function html-encodes messages for display in the page.
@@ -99,9 +100,6 @@
 }
 
 
-<div>
-    Room temperature: <span id="temp"></span>
-</div>
 <button type="button" id="startGame" class="button" value="START">START</button>
 <div class="scoreTable">
     <span id="red">@ViewBag.Score.Red</span>-<span id="blue">@ViewBag.Score.Blue</span>
