@@ -28,6 +28,15 @@ namespace LiveFoosball
             log.Info("Foosball app is starting");
             Task.Run(() => XivelyClient.Listener.Connect("ws://api.xively.com:8080", "1996686508/datastreams/Goal", Game.TrackGoal));
             log.Info("Foosball app is started");
+
+            var gameId = Guid.NewGuid();
+
+            LiveFoosball.Dal.FoosballCollections.AddGoalForGame(gameId, Dal.Team.Blue, DateTime.UtcNow);
+            LiveFoosball.Dal.FoosballCollections.AddGoalForGame(gameId, Dal.Team.Blue, DateTime.UtcNow);
+            LiveFoosball.Dal.FoosballCollections.AddGoalForGame(gameId, Dal.Team.Blue, DateTime.UtcNow);
+
+            var goals = LiveFoosball.Dal.FoosballCollections.GetGoalsForGame(gameId);
+
         }
     }
 }

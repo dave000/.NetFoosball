@@ -213,6 +213,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LiveFossball.Dal\LiveFoosball.Dal.csproj">
+      <Project>{7c8aa55c-a7e8-42f0-b48e-b0e94d72fda9}</Project>
+      <Name>LiveFoosball.Dal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XivelyClient\XivelyClient.csproj">
       <Project>{4b0ff734-e1da-4149-aa29-09968496c5ac}</Project>
       <Name>XivelyClient</Name>

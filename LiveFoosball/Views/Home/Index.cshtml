@@ -11,6 +11,7 @@
     <script src="~/signalr/hubs"></script>
     <!--SignalR script to update the chat page and send messages.-->
     <script>
+        
         $(function () {
             var gameId = null, score, $red = $('#red'), $blue = $('#blue'), $startGame = $('#startGame'), $temp = $('#temp');
             // Reference the auto-generated proxy for the hub.
@@ -57,7 +58,7 @@
 
             //alert("WebSocket is supported by your Browser!");
             // Let us open a web socket
-            var ws = new WebSocket("ws://api.xively.com:8080");
+            ws = new WebSocket("ws://api.xively.com:8080");
             ws.onopen = function () {
                 // Web Socket is connected, send data using send()
 
@@ -83,12 +84,17 @@
                 if (result.body)
                 {
                     $temp.text(result.body.current_value + " " + result.body.unit.symbol);
+                    console.log(result.body.current_value + " " + result.body.unit.symbol);
                 }
             };
             ws.onclose = function () {
                 // websocket is closed.
                 //alert("Connection is closed...");
                 console.log("xively socket closed");
+            };
+
+            ws.onerror = function (data) {
+                console.log("xively socket error - " + data);
             };
         });
         // This optional function html-encodes messages for display in the page.

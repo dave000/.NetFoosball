@@ -9,7 +9,15 @@ namespace LiveFoosball.GameData
 {
     public static class GameStarter
     {
+        private static readonly string AutoGameClientId = Guid.Empty.ToString();
+
         private static ConcurrentDictionary<Guid, GameInfo> _pendingGames = new ConcurrentDictionary<Guid, GameInfo>();
+        
+        public static GameInfo TryAutoStartGame()
+        {
+            return TryStartGame(AutoGameClientId);
+        }
+        
         public static GameInfo TryStartGame(string clientId)
         {
             lock(_pendingGames)

@@ -1,4 +1,5 @@
-﻿using LiveFoosball.SignalR;
+﻿using LiveFoosball.Dal;
+using LiveFoosball.SignalR;
 using Microsoft.AspNet.SignalR;
 using NLog;
 using System;
@@ -93,9 +94,19 @@ namespace LiveFoosball.GameData
             Score.LastScore = goalTime;
         }
 
+        public static Dal.Team GetDalTeam(Team team)
+        {
+            return team == Team.Blue ? Dal.Team.Blue : Dal.Team.Red;
+        }
+
         public static void TrackGoal(dynamic goalData)
         {
-            if (Current != null && !Current.Finished && goalData != null && goalData.id == "Goal")
+            if (Current == null || Current.Finished)
+            {
+                GameStarter.TryAutoStartGame();
+            }
+
+            if (goalData != null && goalData.id == "Goal")
             {
                 try
                 {
@@ -103,6 +114,8 @@ namespace LiveFoosball.GameData
                     Current.TrackGoal(team, goalData.at.Value);
                     var hubContext = _getHubContext();
                     hubContext.Clients.All.goal(Current.Score);
+
+                    FoosballCollections.AddGoalForGame(Current.Info.Id, GetDalTeam(team), goalData.at.Value);
                 }
                 catch (Exception ex)
                 {

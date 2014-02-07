@@ -29,6 +29,8 @@ local.properties
 .buildpath
 
 
+Netduino/
+
 #################
 ## Visual Studio
 #################
@@ -40,6 +42,10 @@ local.properties
 *.suo
 *.user
 *.sln.docstates
+
+## TFS
+$tf/
+BuildProcessTemplates/
 
 # Build results
 
