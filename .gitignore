@@ -29,7 +29,7 @@ local.properties
 .buildpath
 
 
-Netduino/
+#Netduino/
 
 #################
 ## Visual Studio
